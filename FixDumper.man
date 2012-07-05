@@ -1,0 +1,69 @@
+.\" Manpage for FixDumper.
+.\" Contact osvaldo.lucchini@baml.com
+.TH man 8 "21 jun 2012" "1.0" "FixDumper man page"
+.SH NAME
+FixDumper \- Dumps FIX messages from text file allowing filtering and tag selection
+.SH SYNOPSIS
+FixDumper [-i file] [-o file] [-w size] [-m type list] [-h] [-s sep] [-I] [-t tag list] [-e] [-E sep] [-f filter on tag] [--help]
+.SH DESCRIPTION
+FixDumper allows to operate on large text (log) file and perform FIX message parsing/filtering/sorting
+It recgnizes FIX messages within text
+Output could be directed to stdout (default) or to file via option
+Messages are by default dumped in columns and sorted by tag number
+.SH OPTIONS
+FixDumper takes the following options:
+.TP 2
+i: input file to use. Default stdin
+.TP 2
+o: output file to use. Default stdout
+.TP 2
+e: dump in comma separated format
+.TP 2
+E: dump in comma separated format using sep instead of comma)
+.TP 2
+f: filter on tag condition (in format "tag value" means where tag equal value)
+.TP 2
+h: print short header every message (tags 35, 49, 56)
+.TP 2
+m: list of msg types to dump based on tag 35 value.
+.TP 2
+s: use "sep" as tag fields separator (default \0x01).
+.TP 2
+t: tag list comma separated.
+.TP 2
+w: width for tag column. Allowed format are "x" or "x:y" (where x is tag size and y is tag value size)
+.RS
+Notice that:
+.TP 2
+- Tag size default is 7 char.
+.TP 2
+- Tag value is fully dumped unless its size is specified.
+.RE
+.TP 2
+I: ignore mandatory tag presence, just dump the content.
+.TP 2
+B: dump all messages filtered as they were received on output (similar to grep)
+.TP 2
+help: show this help. Notice -h is not an abbreviation.
+.SH EXAMPLES
+1. FixDumper -i logInput.log -E\| -t11,35,49,56
+   Reads input from file logInput.log
+   Select only tags 11, 35, 49 and 56 to dump
+   Dumps output in comma separated values using "|" as separator
+
+2. cat logInput.log | FixDumper -f "35 8" -o logOutput.txt -B
+   Reads from standard input
+   Filter records where 35=8 only
+   Dumps on logOutput.txt file
+   writes records as they where read from inpput (grep-like functionality)
+
+3. FixDumper -i logInput.log -h
+   Dumps all messages from file logInput.log prefixing with a short header
+   stating message type, source and destination
+
+
+.SH SEE ALSO
+.SH BUGS
+Many, waiting to be discovered.
+.SH AUTHOR
+Osvaldo Lucchini (osvaldo.lucchini@baml.com)
